@@ -1,8 +1,10 @@
+# Arquivos e diretórios gerados/temporários
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.mv.db                     # Ignora arquivos de banco de dados H2
+NEWLY_CREATED_BY_SPRING_INITIALIZR # Ignora arquivo/diretório do Spring Initializr
 
 ### STS ###
 .apt_generated
