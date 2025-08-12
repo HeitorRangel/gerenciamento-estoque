@@ -1,4 +1,4 @@
-package br.edu.iff.ccc.webbege2.controller;
+package br.edu.iff.ccc.gerenciadorapp.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package br.edu.iff.ccc.webbege2.controller.view;
+package br.edu.iff.ccc.gerenciadorapp.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

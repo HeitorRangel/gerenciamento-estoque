@@ -49,8 +49,8 @@
       <div id="user-avatar" class="w-32 h-32 rounded-full mx-auto bg-cover bg-center mb-4"></div>
 
       <!-- Nome e Email -->
-      <h2 id="user-name" class="text-2xl font-bold"></h2>
-      <p id="user-email" class="text-textoSec"></p>
+      <h2 id="user-name" class="text-2xl font-bold" th:text="${usuario.name}"></h2>
+      <p id="user-email" class="text-textoSec" th:text="${usuario.email}"></p>
 
       <!-- Botão -->
       <button class="mt-6 bg-roxo1 hover:bg-roxo2 transition-colors px-5 py-2 rounded-lg text-white font-semibold">
