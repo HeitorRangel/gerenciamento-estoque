@@ -9,9 +9,7 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<String> getProduto(@PathVariable Long id) {
-        String produto = String.format(
-            "ID: %d\nNome: Café Gourmet\nDescrição: Café em grãos premium\nPreço: R$ 25,00", id
-        );
+        String produto = String.format("Produto com ID %d: Nome=Exemplo, Descrição=Produto de exemplo, Preço=100.00", id);
         return ResponseEntity.ok(produto);
     }
 
