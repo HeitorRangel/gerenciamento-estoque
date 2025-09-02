@@ -11,14 +11,19 @@ import java.util.Optional;
 public class UserService {
 
     private final List<User> usuarios = new ArrayList<>();
+    private long nextId = 1; // controla o próximo ID
 
     public UserService() {
-        // Usuário padrão (mockado)
-        usuarios.add(new User(1L, "Usuário Padrão", "usuario@teste.com"));
+        // Usuários mocados
+        User admin = new User(nextId++, "Admin", "admin@teste.com");
+        User gerente = new User(nextId++, "Gerente Estoque", "gerente@teste.com");
+
+        usuarios.add(admin);
+        usuarios.add(gerente);
     }
 
     public List<User> listarTodos() {
-        return usuarios;
+        return new ArrayList<>(usuarios);
     }
 
     public Optional<User> buscarPorId(Long id) {
@@ -26,6 +31,7 @@ public class UserService {
     }
 
     public void salvar(User user) {
+        user.setId(nextId++);
         usuarios.add(user);
     }
 

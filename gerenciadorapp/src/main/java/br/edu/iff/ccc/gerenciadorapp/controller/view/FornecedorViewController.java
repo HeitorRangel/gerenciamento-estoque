@@ -21,20 +21,20 @@ public class FornecedorViewController {
     @GetMapping
     public String listarFornecedores(Model model) {
         model.addAttribute("fornecedores", fornecedorService.listarTodos());
-        return "fornecedores/lista";
+        return "fornecedores/listar";
     }
 
     @GetMapping("/novo")
     public String novoFornecedorForm(Model model) {
         model.addAttribute("fornecedorDTO", new FornecedorDTO());
-        return "fornecedores/novo";
+        return "fornecedores/formulario";
     }
 
     @PostMapping("/novo")
     public String salvarNovoFornecedor(@ModelAttribute("fornecedorDTO") @Valid FornecedorDTO fornecedorDTO,
                                       BindingResult result) {
         if (result.hasErrors()) {
-            return "fornecedores/novo";
+            return "fornecedores/formulario";
         }
 
         Fornecedor fornecedor = new Fornecedor();
@@ -68,7 +68,7 @@ public class FornecedorViewController {
         model.addAttribute("fornecedorDTO", fornecedorDTO);
         model.addAttribute("fornecedorId", id);
 
-        return "fornecedores/editar";
+        return "fornecedores/formulario";
     }
 
     @PostMapping("/{id}/editar")
@@ -77,7 +77,7 @@ public class FornecedorViewController {
                                         BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("fornecedorId", id);
-            return "fornecedores/editar";
+            return "fornecedores/formulario";
         }
 
         Fornecedor fornecedorAtualizado = new Fornecedor();

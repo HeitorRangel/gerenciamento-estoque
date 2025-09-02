@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title>Lista de Produtos</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-white text-[32px] font-bold mb-6">Lista de Produtos</h1>
+
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+        <tr class="bg-[#4B0082] text-white">
+            <th class="border border-gray-300 px-4 py-2">ID</th>
+            <th class="border border-gray-300 px-4 py-2">Nome</th>
+            <th class="border border-gray-300 px-4 py-2">Preço</th>
+            <th class="border border-gray-300 px-4 py-2">Fornecedor</th>
+            <th class="border border-gray-300 px-4 py-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="produto : ${produtos}">
+            <td class="border border-gray-300 px-4 py-2 text-white" th:text="${produto.id}">1</td>
+            <td class="border border-gray-300 px-4 py-2 text-white" th:text="${produto.nome}">Produto Exemplo</td>
+            <td class="border border-gray-300 px-4 py-2 text-white" th:text="${produto.preco}">0.00</td>
+            <td class="border border-gray-300 px-4 py-2 text-white" th:text="${produto.fornecedor != null ? produto.fornecedor.nome : 'N/A'}">Fornecedor</td>
+            <td class="border border-gray-300 px-4 py-2 flex gap-2">
+                <a th:href="@{'/produtos/' + ${produto.id}}" 
+                   class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                   Detalhes
+                </a>
+                <a th:href="@{'/produtos/' + ${produto.id} + '/editar'}" 
+                   class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                   Editar
+                </a>
+                <form th:action="@{'/produtos/' + ${produto.id} + '/deletar'}" method="post" class="inline">
+                    <button type="submit" 
+                            class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                        Deletar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(produtos)}">
+            <td colspan="5" class="border border-gray-300 px-4 py-2 text-center text-white">Nenhum produto cadastrado.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-6">
+        <a th:href="@{/produtos/novo}" 
+           class="px-4 py-2 bg-[#8A2BE2] text-white rounded-lg hover:bg-[#6A1EAD]">Novo Produto</a>
+    </div>
+
+</main>
+</body>
+</html>

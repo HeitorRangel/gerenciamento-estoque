@@ -11,7 +11,12 @@
     <div class="flex flex-col min-h-screen">
 
         <header class="flex items-center justify-between px-10 py-3">
-            <h1 class="text-xl font-bold">King Manager</h1>
+            <!-- Logo + Título -->
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <img src="/images/logo.png" alt="Logo King Manager" class="w-12 h-12">
+                King Manager
+            </h1>
+
             <nav>
                 <ul class="flex gap-4 items-center">
                     <li><a th:href="@{/}">Home</a></li>

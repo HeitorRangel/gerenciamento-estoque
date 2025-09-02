@@ -15,11 +15,11 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <h1 class="text-[#111418] text-[32px] font-bold mb-6">Lista de Usuários</h1>
+    <h1 class="text-white text-3xl font-bold mb-6">Lista de Usuários</h1>
 
     <table class="table-auto w-full border-collapse border border-gray-300">
         <thead>
-        <tr class="bg-gray-100">
+        <tr class="bg-gray-800 text-white">
             <th class="border border-gray-300 px-4 py-2">ID</th>
             <th class="border border-gray-300 px-4 py-2">Nome</th>
             <th class="border border-gray-300 px-4 py-2">Email</th>
@@ -27,15 +27,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="usuario : ${usuarios}">
+        <tr th:each="usuario : ${usuarios}" class="text-white">
             <td class="border border-gray-300 px-4 py-2" th:text="${usuario.id}"></td>
-            <td class="border border-gray-300 px-4 py-2" th:text="${usuario.nome}"></td>
+            <td class="border border-gray-300 px-4 py-2" th:text="${usuario.name}"></td>
             <td class="border border-gray-300 px-4 py-2" th:text="${usuario.email}"></td>
             <td class="border border-gray-300 px-4 py-2">
-                <a th:href="@{'/usuarios/' + ${usuario.id}}" class="text-blue-600 hover:underline">Detalhes</a> |
-                <a th:href="@{'/usuarios/' + ${usuario.id} + '/editar'}" class="text-green-600 hover:underline">Editar</a> |
+                <a th:href="@{'/usuarios/' + ${usuario.id}}" class="text-white hover:underline">Detalhes</a> |
+                <a th:href="@{'/usuarios/' + ${usuario.id} + '/editar'}" class="text-white hover:underline">Editar</a> |
                 <form th:action="@{'/usuarios/' + ${usuario.id} + '/deletar'}" method="post" class="inline">
-                    <button type="submit" class="text-red-600 hover:underline bg-transparent border-0 p-0">Deletar</button>
+                    <button type="submit" class="text-white hover:underline bg-transparent border-0 p-0">Deletar</button>
                 </form>
             </td>
         </tr>
@@ -43,7 +43,9 @@
     </table>
 
     <div class="mt-6">
-        <a th:href="@{/usuarios/novo}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Novo Usuário</a>
+        <a th:href="@{/usuarios/novo}" class="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800">
+            Novo Usuário
+        </a>
     </div>
 
 </main>

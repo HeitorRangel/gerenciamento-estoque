@@ -98,4 +98,18 @@ public class UsuarioViewController {
         model.addAttribute("usuario", usuarioOpt.get());
         return view;
     }
+
+    @GetMapping("/perfil")
+    public String meuPerfil(Model model) {
+        // Buscar o usuário administrador com ID 1
+        User admin = userService.buscarPorId(1L).orElse(null);
+
+        // Adicionar o usuário ao modelo
+        model.addAttribute("usuario", admin);
+
+        // Retornar a view desejada, pode ser detalhes ou perfil
+        return "usuarios/perfil"; // Se quiser usar a view detalhes, troque para "usuarios/detalhes"
+    }
+
 }
+
