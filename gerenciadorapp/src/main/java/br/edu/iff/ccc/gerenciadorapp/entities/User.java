@@ -1,12 +1,9 @@
 package br.edu.iff.ccc.gerenciadorapp.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "user_gerenciador")
@@ -17,44 +14,30 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Nome não pode estar vazio")
     private String name;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Email não pode estar vazio")
+    @Email(message = "Email inválido")
     private String email;
 
-    public User (){
-    }
+    public User() {}
 
     public User(Long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
     }
-    
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getName() {
-        return name;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getEmail() {
-        return email;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
     @Override
     public String toString() {
         return "User{" +
@@ -63,14 +46,12 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 '}';
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
-
         User user = (User) o;
-
         return id != null ? id.equals(user.id) : user.id == null;
     }
-    
 }

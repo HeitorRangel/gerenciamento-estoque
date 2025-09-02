@@ -1,48 +1,43 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
+
 import br.edu.iff.ccc.gerenciadorapp.entities.User;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    public User createUser(long id, String name, String email) {
-        System.err.println("Usuario criado com sucesso: " + name);
-        return new User(id, name, email);
+
+    private final List<User> usuarios = new ArrayList<>();
+    private long nextId = 1;
+
+    public List<User> listarTodos() {
+        return new ArrayList<>(usuarios); // retorna cópia para evitar manipulação externa
     }
 
-    public User getUser(long id) {
-
-        if (id == 1L){
-            return new User(1L,  "Usuario Teste",  "emailteste@email.com");      
-        }else if (id == 2L) {
-            return new User(2L,  "Usuario Teste 2", "emailteste2@email.com");
-    }
-    return null;
-    }
-    
-    public User updateUser(long id, String name, String email) {
-        User user = getUser(id);
-        if (user != null) {
-            user.setName(name);
-            user.setEmail(email);
-        }
+    public User salvar(User user) {
+        user.setId(nextId++);
+        usuarios.add(user);
         return user;
     }
 
-    public void deleteUser(long id) {
-        System.out.println("Usuario com id " + id + " deletado.");
+    public Optional<User> buscarPorId(long id) {
+        return usuarios.stream()
+                .filter(u -> u.getId() == id)
+                .findFirst();
     }
 
-    public List<User> listUsers() {
-        // Simulando uma lista de usuários
-        User user1 = new User(1L, "Usuario Teste", "emailteste@email.com");
-        User user2 = new User(2L, "Usuario Teste 2", "emailteste2@email.com");
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-        return users;
+    public User atualizar(long id, User usuarioAtualizado) {
+        return buscarPorId(id).map(existente -> {
+            existente.setName(usuarioAtualizado.getName());
+            existente.setEmail(usuarioAtualizado.getEmail());
+            return existente;
+        }).orElse(null);
     }
-}   
+
+    public boolean deletar(long id) {
+        return usuarios.removeIf(u -> u.getId() == id);
+    }
+}

@@ -1,61 +1,23 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <title>Perfil do Usuário</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              roxo1: "#7B58ED",
-              roxo2: "#AC58ED",
-              roxo3: "#5864ED",
-              azul1: "#4187F0",
-              rosa: "#DE58ED",
-              lilas: "#B7A6ED",
-              fundo: "#161221",
-              texto: "#FFFFFF",
-              textoSec: "#A295C6",
-            },
-            fontFamily: {
-              sans: ['"Manrope"', '"Noto Sans"', "sans-serif"],
-            },
-          },
-        },
-      };
-    </script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-fundo min-h-screen text-texto font-sans">
+</head>
+<body>
+
     <!-- Header -->
-    <header class="flex justify-between items-center px-6 py-4 border-b border-[#2e2546]">
-      <div class="flex items-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-5 h-5 text-roxo1" viewBox="0 0 16 16">
-          <path d="M8 0a8 8 0 1 0 8 8A8.009 8.009 0 0 0 8 0ZM8 15A7 7 0 1 1 15 8 7.008 7.008 0 0 1 8 15Z"/>
-        </svg>
-        <h1 class="text-lg font-bold">Perfil</h1>
-      </div>
-      <div id="user-avatar-header" class="rounded-full w-8 h-8 bg-cover bg-center"></div>
-    </header>
+    <div th:replace="fragments/base :: header"></div>
 
-    <!-- Conteúdo principal -->
-    <main class="max-w-xl mx-auto p-6 text-center">
-      <!-- Avatar -->
-      <div id="user-avatar" class="w-32 h-32 rounded-full mx-auto bg-cover bg-center mb-4"></div>
+    <!-- Conteúdo -->
+    <main th:replace="fragments/base :: content">
+        <h1>Perfil do Usuário</h1>
+        <p>Nome: <span th:text="${usuario.name}"></span></p>
+        <p>Email: <span th:text="${usuario.email}"></span></p>
 
-      <!-- Nome e Email -->
-      <h2 id="user-name" class="text-2xl font-bold" th:text="${usuario.name}"></h2>
-      <p id="user-email" class="text-textoSec" th:text="${usuario.email}"></p>
-
-      <!-- Botão -->
-      <button class="mt-6 bg-roxo1 hover:bg-roxo2 transition-colors px-5 py-2 rounded-lg text-white font-semibold">
-        Editar perfil
-      </button>
+        <a th:href="@{/usuarios}">Voltar para lista</a>
     </main>
-  </body>
+
+    <!-- Footer -->
+    <div th:replace="fragments/base :: footer"></div>
+</body>
 </html>

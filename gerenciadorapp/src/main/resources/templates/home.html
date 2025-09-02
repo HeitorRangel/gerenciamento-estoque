@@ -1,10 +1,28 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Página Inicial</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Bem-Vindo a minha página inicial</h1>
-    <p>Primeiro template de home</p>
+
+    <!-- Header -->
+    <div th:replace="fragments/base :: header"></div>
+
+    <!-- Conteúdo -->
+    <main>
+        <h2>Bem-vindo à página inicial</h2>
+        <p>Escolha uma opção abaixo:</p>
+        <ul>
+            <li><a th:href="@{/usuarios}">Gerenciar Usuários</a></li>
+            <li><a th:href="@{/produtos}">Gerenciar Produtos</a></li>
+            <li><a th:href="@{/fornecedores}">Gerenciar Fornecedores</a></li>
+        </ul>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/base :: footer"></div>
+
 </body>
 </html>
