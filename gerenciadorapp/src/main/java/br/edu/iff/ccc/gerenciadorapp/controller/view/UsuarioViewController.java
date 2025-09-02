@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -18,67 +19,60 @@ public class UsuarioViewController {
     @Autowired
     private UserService userService;
 
+    // LISTAR USUÁRIOS
     @GetMapping
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", userService.listarTodos());
-        return "listUsers";
+        return "usuarios/listar";
     }
 
+    // FORMULÁRIO NOVO USUÁRIO
     @GetMapping("/novo")
     public String novoUsuarioForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
-        return "createUserForm";
+        return "usuarios/formulario";
     }
 
     @PostMapping("/novo")
-    public String salvarNovoUsuario(@ModelAttribute("userDTO") @Valid UserDTO userDTO, 
-                                    BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "createUserForm";
-        }
+    public String salvarNovoUsuario(@ModelAttribute("userDTO") @Valid UserDTO userDTO,
+                                    BindingResult result) {
+        if (result.hasErrors()) return "usuarios/formulario";
 
-        // Converte DTO para entidade
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
+        User usuario = new User();
+        usuario.setName(userDTO.getName());
+        usuario.setEmail(userDTO.getEmail());
 
-        userService.salvar(user);
+        userService.salvar(usuario);
 
-        return "redirect:/usuarios";
+        return "redirect:/usuarios/" + usuario.getId();
     }
 
+    // DETALHES DO USUÁRIO
     @GetMapping("/{id}")
     public String detalhesUsuario(@PathVariable Long id, Model model) {
-        User usuario = userService.buscarPorId(id).orElse(null);
-        if (usuario == null) {
-            return "redirect:/usuarios"; // Redireciona se não encontrar
-        }
-        model.addAttribute("usuario", usuario);
-        return "userDetailHome";
+        return buscarUsuarioOuRedirecionar(id, model, "usuarios/detalhes");
     }
 
+    // FORMULÁRIO DE EDIÇÃO
     @GetMapping("/{id}/editar")
     public String editarUsuarioForm(@PathVariable Long id, Model model) {
         User usuario = userService.buscarPorId(id).orElse(null);
-        if (usuario == null) {
-            return "redirect:/usuarios";
-        }
+        if (usuario == null) return "redirect:/usuarios";
 
-        // Popula DTO com os dados atuais
         UserDTO userDTO = new UserDTO(usuario.getName(), usuario.getEmail());
         model.addAttribute("userDTO", userDTO);
         model.addAttribute("usuarioId", id);
 
-        return "usuarios/editar";
+        return "usuarios/formulario";
     }
 
     @PostMapping("/{id}/editar")
-    public String salvarEdicaoUsuario(@PathVariable Long id, 
-                                      @ModelAttribute("userDTO") @Valid UserDTO userDTO, 
+    public String salvarEdicaoUsuario(@PathVariable Long id,
+                                      @ModelAttribute("userDTO") @Valid UserDTO userDTO,
                                       BindingResult result, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("usuarioId", id);
-            return "usuarios/editar";
+            return "usuarios/formulario";
         }
 
         User usuarioAtualizado = new User();
@@ -87,12 +81,21 @@ public class UsuarioViewController {
 
         userService.atualizar(id, usuarioAtualizado);
 
-        return "redirect:/usuarios";
+        return "redirect:/usuarios/" + id;
     }
 
+    // DELETAR USUÁRIO
     @PostMapping("/{id}/deletar")
     public String deletarUsuario(@PathVariable Long id) {
         userService.deletar(id);
         return "redirect:/usuarios";
+    }
+
+    private String buscarUsuarioOuRedirecionar(Long id, Model model, String view) {
+        Optional<User> usuarioOpt = userService.buscarPorId(id);
+        if (usuarioOpt.isEmpty()) return "redirect:/usuarios";
+
+        model.addAttribute("usuario", usuarioOpt.get());
+        return view;
     }
 }

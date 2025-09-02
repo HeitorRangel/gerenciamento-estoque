@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo='Detalhes do Usuário', conteudo=~{::main})}">
+<head>
+    <title>Detalhes do Usuário</title>
+</head>
+<body>
+    <main>
+        <h1 class="text-3xl font-bold mb-6">Detalhes do Usuário</h1>
+
+        <div class="bg-[#1E0038] p-6 rounded-md shadow-md space-y-3">
+            <p><strong>ID:</strong> <span th:text="${usuario.id}"></span></p>
+            <p><strong>Nome:</strong> <span th:text="${usuario.name}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${usuario.email}"></span></p>
+
+        </div>
+
+        <div class="mt-6 flex gap-4">
+            <a th:href="@{/}"
+               class="px-4 py-2 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+               Voltar
+            </a>
+            <a th:href="@{'/usuarios/' + ${usuario.id} + '/editar'}"
+               class="px-4 py-2 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+               Editar
+            </a>
+        </div>
+    </main>
+</body>
+</html>

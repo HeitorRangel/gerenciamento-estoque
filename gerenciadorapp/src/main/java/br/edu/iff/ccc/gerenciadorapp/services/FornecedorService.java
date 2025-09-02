@@ -13,6 +13,15 @@ public class FornecedorService {
     private final List<Fornecedor> fornecedores = new ArrayList<>();
     private long nextId = 1;
 
+    public FornecedorService() {
+    // Fornecedor de exemplo
+    Fornecedor exemplo = new Fornecedor(); // construtor padrão
+    exemplo.setId(nextId++);
+    exemplo.setNome("Fornecedor Exemplo");
+    fornecedores.add(exemplo);
+    }
+
+
     public List<Fornecedor> listarTodos() {
         return new ArrayList<>(fornecedores);
     }

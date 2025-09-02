@@ -11,33 +11,35 @@ import java.util.Optional;
 public class UserService {
 
     private final List<User> usuarios = new ArrayList<>();
-    private long nextId = 1;
+
+    public UserService() {
+        // Usuário padrão (mockado)
+        usuarios.add(new User(1L, "Usuário Padrão", "usuario@teste.com"));
+    }
 
     public List<User> listarTodos() {
-        return new ArrayList<>(usuarios); // retorna cópia para evitar manipulação externa
+        return usuarios;
     }
 
-    public User salvar(User user) {
-        user.setId(nextId++);
+    public Optional<User> buscarPorId(Long id) {
+        return usuarios.stream().filter(u -> u.getId().equals(id)).findFirst();
+    }
+
+    public void salvar(User user) {
         usuarios.add(user);
-        return user;
     }
 
-    public Optional<User> buscarPorId(long id) {
-        return usuarios.stream()
-                .filter(u -> u.getId() == id)
-                .findFirst();
+    public void atualizar(Long id, User userAtualizado) {
+        usuarios.stream()
+            .filter(u -> u.getId().equals(id))
+            .findFirst()
+            .ifPresent(u -> {
+                u.setName(userAtualizado.getName());
+                u.setEmail(userAtualizado.getEmail());
+            });
     }
 
-    public User atualizar(long id, User usuarioAtualizado) {
-        return buscarPorId(id).map(existente -> {
-            existente.setName(usuarioAtualizado.getName());
-            existente.setEmail(usuarioAtualizado.getEmail());
-            return existente;
-        }).orElse(null);
-    }
-
-    public boolean deletar(long id) {
-        return usuarios.removeIf(u -> u.getId() == id);
+    public void deletar(Long id) {
+        usuarios.removeIf(u -> u.getId().equals(id));
     }
 }
