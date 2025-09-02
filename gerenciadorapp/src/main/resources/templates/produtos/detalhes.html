@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title>Detalhes do Produto</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-[#111418] text-[32px] font-bold mb-6">Detalhes do Produto</h1>
+
+    <div>
+        <p><strong>ID:</strong> <span th:text="${produto.id}"></span></p>
+        <p><strong>Nome:</strong> <span th:text="${produto.nome}"></span></p>
+        <p><strong>Descrição:</strong> <span th:text="${produto.descricao}"></span></p>
+        <p><strong>Preço:</strong> R$ <span th:text="${produto.preco}"></span></p>
+        <p><strong>Quantidade:</strong> <span th:text="${produto.quantidade}"></span></p>
+        <p><strong>Fornecedor:</strong> <span th:text="${produto.fornecedor != null ? produto.fornecedor.nome : 'N/A'}"></span></p>
+    </div>
+
+    <div class="mt-6">
+        <a th:href="@{/produtos}" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Voltar</a>
+        <a th:href="@{'/produtos/' + ${produto.id} + '/editar'}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Editar</a>
+    </div>
+
+</main>
+</body>
+</html>

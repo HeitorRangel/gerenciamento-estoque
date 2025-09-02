@@ -1,49 +1,47 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.Produto;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 @Service
 public class ProdutoService {
-    public Produto createProduto(long id, String nome, String descricao) {
-        System.err.println("Produto criado com sucesso: " + nome);
-        return new Produto(id, nome, descricao);
+
+    private final List<Produto> produtos = new ArrayList<>();
+    private long nextId = 1;
+
+    public List<Produto> listarTodos() {
+        return new ArrayList<>(produtos);
     }
 
-    public Produto getProduto(long id) {
-
-        if (id == 1L){
-            return new Produto(1L,  "Produto Teste",  "descricaoteste");      
-        }else if (id == 2L) {
-            return new Produto(2L,  "Produto Teste 2", "descricaoteste2");
-    }
-    return null;
-    }
-    
-    public Produto updateProduto(long id, String nome, String descricao) {
-        Produto produto = getProduto(id);
-        if (produto != null) {
-            produto.setNome(nome);
-            produto.setDescricao(descricao);
-        }
+    public Produto salvar(Produto produto) {
+        produto.setId(nextId++);
+        produtos.add(produto);
         return produto;
     }
 
-    public void deleteProduto(long id) {
-        System.out.println("Produto com id " + id + " deletado.");
+    public Produto buscarPorId(long id) {
+        for (Produto p : produtos) {
+            if (p.getId().equals(id)) return p;
+        }
+        return null;
     }
 
-    public List<Produto> listProdutos() {
-        // Simulando uma lista de produtos
-        Produto produto1 = new Produto(1L, "Produto Teste", "descricaoteste");
-        Produto produto2 = new Produto(2L, "Produto Teste 2", "descricaoteste2");
-        List<Produto> produtos = new ArrayList<>();
-        produtos.add(produto1);
-        produtos.add(produto2);
-        return produtos;
+    public Produto atualizar(long id, Produto produtoAtualizado) {
+        Produto existente = buscarPorId(id);
+        if (existente != null) {
+            existente.setNome(produtoAtualizado.getNome());
+            existente.setDescricao(produtoAtualizado.getDescricao());
+            existente.setQuantidade(produtoAtualizado.getQuantidade());
+            existente.setPreco(produtoAtualizado.getPreco());
+            existente.setFornecedor(produtoAtualizado.getFornecedor());
+        }
+        return existente;
+    }
+
+    public boolean deletar(long id) {
+        return produtos.removeIf(p -> p.getId() == id);
     }
 }

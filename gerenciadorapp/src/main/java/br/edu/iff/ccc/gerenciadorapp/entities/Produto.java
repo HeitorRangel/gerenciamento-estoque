@@ -1,14 +1,14 @@
 package br.edu.iff.ccc.gerenciadorapp.entities;
 
 import java.io.Serializable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import java.util.ArrayList;
+import java.util.List;
+
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "produto_gerenciador")
@@ -19,23 +19,36 @@ public class Produto implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Nome não pode estar vazio")
+    @Column(nullable = false)
     private String nome;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Descrição não pode estar vazia")
+    @Column(nullable = false)
     private String descricao;
 
+    @PositiveOrZero(message = "Quantidade não pode ser negativa")
+    @Column(nullable = false)
     private Integer quantidade;
+
+    @Positive(message = "Preço deve ser maior que zero")
+    @Column(nullable = false)
     private Float preco;
 
     @ManyToOne
-    @JoinColumn(name = "fornecedor_id")
+    @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
-    public Produto() {
-    }
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MovimentoEstoque> movimentos = new ArrayList<>();
 
-    public Produto(Long id, String nome, String descricao, Integer quantidade, Float preco, Fornecedor fornecedor) {
+    public List<MovimentoEstoque> getMovimentos() { return movimentos; }
+    public void setMovimentos(List<MovimentoEstoque> movimentos) { this.movimentos = movimentos; }
+
+
+    public Produto() {}
+    public Produto(Long id, String nome, String descricao,
+                   Integer quantidade, Float preco, Fornecedor fornecedor) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -44,7 +57,6 @@ public class Produto implements Serializable {
         this.fornecedor = fornecedor;
     }
 
-    // Getters e Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -1,0 +1,64 @@
+body, h1, h2, p, div, ul, li, nav, header, footer, main {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans', sans-serif;
+    background-color: #2A004D;
+    color: #FFFFF7;
+    line-height: 1.5;
+}
+
+header {
+    background-color: #1E0038;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+header nav a {
+    color: #FFFFF7;
+    text-decoration: none;
+    margin-right: 1rem;
+    transition: color 0.2s;
+}
+
+header nav a:hover {
+    color: #CCCCCC;
+}
+
+main {
+    padding: 2rem;
+}
+
+footer {
+    background-color: #1E0038;
+    padding: 1rem 2rem;
+    text-align: center;
+    color: #A9A9A9;
+}
+
+main ul li a {
+    color: #FFFFF7;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+main ul li a:hover {
+    color: #CCCCCC;
+}
+
+button {
+    background-color: #8A2BE2;
+    color: #FFFFF7;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #6A1EAD;
+}

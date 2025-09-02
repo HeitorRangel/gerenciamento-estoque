@@ -3,13 +3,8 @@ package br.edu.iff.ccc.gerenciadorapp.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "fornecedor_gerenciador")
@@ -20,19 +15,18 @@ public class Fornecedor implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Nome não pode estar vazio")
+    @Column(nullable = false, unique = true)
     private String nome;
 
-    @NotEmpty(message = "Não pode ser vazio")
+    @NotBlank(message = "Contato não pode estar vazio")
+    @Column(nullable = false)
     private String contato;
 
-    // Um fornecedor pode ter vários produtos
-    @OneToMany(mappedBy = "fornecedor")
+    @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Produto> produtos = new ArrayList<>();
 
-    public Fornecedor() {
-    }
-
+    public Fornecedor() {}
     public Fornecedor(Long id, String nome, String contato) {
         this.id = id;
         this.nome = nome;

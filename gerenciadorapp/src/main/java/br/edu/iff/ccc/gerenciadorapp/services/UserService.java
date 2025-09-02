@@ -1,48 +1,48 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
+
 import br.edu.iff.ccc.gerenciadorapp.entities.User;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 @Service
 public class UserService {
-    public User createUser(long id, String name, String email) {
-        System.err.println("Usuario criado com sucesso: " + name);
-        return new User(id, name, email);
+
+    private final List<User> usuarios = new ArrayList<>();
+    private long nextId = 1;
+
+    public UserService() {
+        // Usuários mocados
+        usuarios.add(new User(nextId++, "Admin", "admin@teste.com"));
+        usuarios.add(new User(nextId++, "Gerente Estoque", "gerente@teste.com"));
     }
 
-    public User getUser(long id) {
+    public List<User> listarTodos() {
+        return new ArrayList<>(usuarios);
+    }
 
-        if (id == 1L){
-            return new User(1L,  "Usuario Teste",  "emailteste@email.com");      
-        }else if (id == 2L) {
-            return new User(2L,  "Usuario Teste 2", "emailteste2@email.com");
-    }
-    return null;
-    }
-    
-    public User updateUser(long id, String name, String email) {
-        User user = getUser(id);
-        if (user != null) {
-            user.setName(name);
-            user.setEmail(email);
+    public User buscarPorId(Long id) {
+        for (User u : usuarios) {
+            if (u.getId().equals(id)) return u;
         }
-        return user;
+        return null;
     }
 
-    public void deleteUser(long id) {
-        System.out.println("Usuario com id " + id + " deletado.");
+    public void salvar(User user) {
+        user.setId(nextId++);
+        usuarios.add(user);
     }
 
-    public List<User> listUsers() {
-        // Simulando uma lista de usuários
-        User user1 = new User(1L, "Usuario Teste", "emailteste@email.com");
-        User user2 = new User(2L, "Usuario Teste 2", "emailteste2@email.com");
-        List<User> users = new ArrayList<>();
-        users.add(user1);
-        users.add(user2);
-        return users;
+    public void atualizar(Long id, User userAtualizado) {
+        User existente = buscarPorId(id);
+        if (existente != null) {
+            existente.setName(userAtualizado.getName());
+            existente.setEmail(userAtualizado.getEmail());
+        }
     }
-}   
+
+    public void deletar(Long id) {
+        usuarios.removeIf(u -> u.getId().equals(id));
+    }
+}

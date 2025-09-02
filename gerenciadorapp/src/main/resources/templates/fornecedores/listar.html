@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title>Lista de Fornecedores</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-white text-[32px] font-bold mb-6">Lista de Fornecedores</h1>
+
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+        <tr class="bg-[#4B0082] text-white">
+            <th class="border border-gray-300 px-4 py-2">ID</th>
+            <th class="border border-gray-300 px-4 py-2">Nome</th>
+            <th class="border border-gray-300 px-4 py-2">Contato</th>
+            <th class="border border-gray-300 px-4 py-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fornecedor : ${fornecedores}">
+            <td class="border border-gray-300 px-4 py-2" th:text="${fornecedor.id}"></td>
+            <td class="border border-gray-300 px-4 py-2" th:text="${fornecedor.nome}"></td>
+            <td class="border border-gray-300 px-4 py-2" th:text="${fornecedor.contato}"></td>
+            <td class="border border-gray-300 px-4 py-2 flex gap-2">
+                <a th:href="@{'/fornecedores/' + ${fornecedor.id}}" 
+                   class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                   Detalhes
+                </a>
+                <a th:href="@{'/fornecedores/' + ${fornecedor.id} + '/editar'}" 
+                   class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                   Editar
+                </a>
+                <form th:action="@{'/fornecedores/' + ${fornecedor.id} + '/deletar'}" method="post" class="inline">
+                    <button type="submit" 
+                            class="px-3 py-1 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+                        Deletar
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(fornecedores)}">
+            <td colspan="4" class="border border-gray-300 px-4 py-2 text-center">Nenhum fornecedor cadastrado.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-6">
+        <a th:href="@{/fornecedores/novo}" 
+           class="px-4 py-2 bg-[#8A2BE2] text-white rounded-lg hover:bg-[#6A1EAD]">Novo Fornecedor</a>
+    </div>
+
+</main>
+</body>
+</html>

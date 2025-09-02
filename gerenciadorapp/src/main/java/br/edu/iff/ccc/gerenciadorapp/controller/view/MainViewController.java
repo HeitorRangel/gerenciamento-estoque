@@ -1,29 +1,35 @@
 package br.edu.iff.ccc.gerenciadorapp.controller.view;
 
+import br.edu.iff.ccc.gerenciadorapp.entities.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
+import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping(path = "/principal")
+@RequestMapping("/principal")
 public class MainViewController {
 
-    @GetMapping()
-    public String getMethodName() {
-        return "home.html";
-    }    
+    /**
+     * Exibe a página principal (home).
+     */
+    @GetMapping
+    public String exibirHome(Model model) {
+        model.addAttribute("pageTitle", "Home - GerenciadorApp");
+        return "index"; // aponta para templates/index.html
+    }
 
+    /**
+     * Exibe os detalhes de um usuário específico.
+     */
     @GetMapping("/user/{id}")
-    public String getUserById(@PathVariable("id")String id, @RequestParam("nome")String nome,@RequestParam("email")String email, Model model) {
-        model.addAttribute("id", id);
-        model.addAttribute("nome", nome);
-        model.addAttribute("email", email);
-        return "userDatailHome.html";
+    public String exibirUsuario(@PathVariable Long id, Model model) {
+    User usuario = new User();
+    usuario.setId(id);
+    usuario.setName("Usuário Teste");
+    usuario.setEmail("teste@email.com");
+
+    model.addAttribute("usuario", usuario);
+    return "usuarios/detalhes";
     }
 
 }

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo='Detalhes do Fornecedor', conteudo=~{::main})}">
+<head>
+    <title>Detalhes do Fornecedor</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-3xl font-bold mb-6">Detalhes do Fornecedor</h1>
+
+    <div class="bg-[#1E0038] p-6 rounded-md shadow-md space-y-3">
+        <p><strong>ID:</strong> <span th:text="${fornecedor.id}"></span></p>
+        <p><strong>Nome:</strong> <span th:text="${fornecedor.nome}"></span></p>
+        <p><strong>Contato:</strong> <span th:text="${fornecedor.contato}"></span></p>
+    </div>
+
+    <div class="mt-6 flex gap-4">
+        <a th:href="@{/fornecedores}"
+           class="px-4 py-2 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+           Voltar
+        </a>
+        <a th:href="@{'/fornecedores/' + ${fornecedor.id} + '/editar'}"
+           class="px-4 py-2 bg-[#8A2BE2] text-white rounded-md hover:bg-[#6A1EAD] transition">
+           Editar
+        </a>
+    </div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title th:text="${usuarioId != null} ? 'Editar Usuário' : 'Cadastro de Usuário'">Usuário</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-white text-3xl font-bold mb-6"
+        th:text="${usuarioId != null} ? 'Editar Usuário' : 'Cadastro de Usuário'">
+        Cadastro de Usuário
+    </h1>
+
+    <form th:action="${usuarioId != null} ? @{/usuarios/{id}/editar(id=${usuarioId})} : @{/usuarios/novo}"
+          th:object="${userDTO}" method="post" class="space-y-4">
+
+        <div>
+            <label for="nome" class="block mb-1">Nome:</label>
+            <input type="text" id="nome" th:field="*{name}" required
+                   class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600"/>
+            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+        </div>
+
+        <div>
+            <label for="email" class="block mb-1">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required
+                   class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600"/>
+            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+        </div>
+
+        <div th:if="${usuarioId == null}">
+            <label for="senha" class="block mb-1">Senha:</label>
+            <input type="password" id="senha" name="senha" required
+                   class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600"/>
+        </div>
+
+        <div class="flex gap-4 mt-4">
+            <button type="submit" class="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800"
+                    th:text="${usuarioId != null} ? 'Salvar Alterações' : 'Salvar'">
+                Salvar
+            </button>
+        </div>
+
+    </form>
+
+</main>
+</body>
+</html>

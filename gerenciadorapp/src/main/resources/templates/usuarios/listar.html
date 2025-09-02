@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title>Lista de Usuários</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <div th:if="${successMessage}" class="alert alert-success mb-4">
+        <span th:text="${successMessage}"></span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger mb-4">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <h1 class="text-white text-3xl font-bold mb-6">Lista de Usuários</h1>
+
+    <table class="table-auto w-full border-collapse border border-gray-300">
+        <thead>
+        <tr class="bg-gray-800 text-white">
+            <th class="border border-gray-300 px-4 py-2">ID</th>
+            <th class="border border-gray-300 px-4 py-2">Nome</th>
+            <th class="border border-gray-300 px-4 py-2">Email</th>
+            <th class="border border-gray-300 px-4 py-2">Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${usuarios}" class="text-white">
+            <td class="border border-gray-300 px-4 py-2" th:text="${usuario.id}"></td>
+            <td class="border border-gray-300 px-4 py-2" th:text="${usuario.name}"></td>
+            <td class="border border-gray-300 px-4 py-2" th:text="${usuario.email}"></td>
+            <td class="border border-gray-300 px-4 py-2">
+                <a th:href="@{'/usuarios/' + ${usuario.id}}" class="text-white hover:underline">Detalhes</a> |
+                <a th:href="@{'/usuarios/' + ${usuario.id} + '/editar'}" class="text-white hover:underline">Editar</a> |
+                <form th:action="@{'/usuarios/' + ${usuario.id} + '/deletar'}" method="post" class="inline">
+                    <button type="submit" class="text-white hover:underline bg-transparent border-0 p-0">Deletar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-6">
+        <a th:href="@{/usuarios/novo}" class="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800">
+            Novo Usuário
+        </a>
+    </div>
+
+</main>
+</body>
+</html>
