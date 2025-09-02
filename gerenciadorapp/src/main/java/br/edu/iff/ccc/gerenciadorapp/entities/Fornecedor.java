@@ -16,16 +16,17 @@ public class Fornecedor implements Serializable {
     private Long id;
 
     @NotBlank(message = "Nome não pode estar vazio")
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @NotBlank(message = "Contato não pode estar vazio")
+    @Column(nullable = false)
     private String contato;
 
     @OneToMany(mappedBy = "fornecedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Produto> produtos = new ArrayList<>();
 
     public Fornecedor() {}
-
     public Fornecedor(Long id, String nome, String contato) {
         this.id = id;
         this.nome = nome;

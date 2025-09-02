@@ -37,14 +37,24 @@ Esse repositório foi criado para a produção do projeto proposto na disciplina
 
 ## Diagrama de Classes ![Diagrama de Classe](docs/diagramas/diagrama-classe.png)
 
-Funcionalidades Implementadas (P1)
+##Funcionalidades Implementadas (P1)
 
-CRUD de Produtos (mockado, sem banco real)
+-CRUD de Produtos (mockado, sem banco real)
 
-CRUD de Usuários (mockado)
+-CRUD de Usuários (mockado)
 
-CRUD de Fornecedores (mockado)
+-CRUD de Fornecedores (mockado)
 
-Visualização de detalhes de cada entidade
+-Visualização de detalhes de cada entidade
 
-Layout base com navegação entre telas
+-Layout base com navegação entre telas
+
+##Próximos Passos / Melhorias Futuras
+
+-Integração com banco de dados real (PostgreSQL ou MySQL)
+
+-Dashboard com gráficos e indicadores de estoque
+
+-Autenticação e controle de acesso por usuários
+
+-Validações adicionais e tratamento de exceções

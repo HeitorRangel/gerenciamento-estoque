@@ -15,10 +15,12 @@ public class User implements Serializable {
     private Long id;
 
     @NotBlank(message = "Nome não pode estar vazio")
+    @Column(nullable = false)
     private String name;
 
     @NotBlank(message = "Email não pode estar vazio")
     @Email(message = "Email inválido")
+    @Column(nullable = false, unique = true)
     private String email;
 
     public User() {}

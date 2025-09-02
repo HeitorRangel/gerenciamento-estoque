@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -23,21 +22,23 @@ public class ProdutoService {
         return produto;
     }
 
-    public Optional<Produto> buscarPorId(long id) {
-        return produtos.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst();
+    public Produto buscarPorId(long id) {
+        for (Produto p : produtos) {
+            if (p.getId().equals(id)) return p;
+        }
+        return null;
     }
 
     public Produto atualizar(long id, Produto produtoAtualizado) {
-        return buscarPorId(id).map(existente -> {
+        Produto existente = buscarPorId(id);
+        if (existente != null) {
             existente.setNome(produtoAtualizado.getNome());
             existente.setDescricao(produtoAtualizado.getDescricao());
             existente.setQuantidade(produtoAtualizado.getQuantidade());
             existente.setPreco(produtoAtualizado.getPreco());
             existente.setFornecedor(produtoAtualizado.getFornecedor());
-            return existente;
-        }).orElse(null);
+        }
+        return existente;
     }
 
     public boolean deletar(long id) {

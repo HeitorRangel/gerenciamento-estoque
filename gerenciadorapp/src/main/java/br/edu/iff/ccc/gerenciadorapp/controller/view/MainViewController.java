@@ -1,8 +1,6 @@
 package br.edu.iff.ccc.gerenciadorapp.controller.view;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.User;
-import br.edu.iff.ccc.gerenciadorapp.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/principal")
 public class MainViewController {
-
-    @Autowired
-    private UserService userService;
 
     /**
      * Exibe a página principal (home).

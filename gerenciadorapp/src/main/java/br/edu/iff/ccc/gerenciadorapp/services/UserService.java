@@ -5,29 +5,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
 
     private final List<User> usuarios = new ArrayList<>();
-    private long nextId = 1; // controla o próximo ID
+    private long nextId = 1;
 
     public UserService() {
         // Usuários mocados
-        User admin = new User(nextId++, "Admin", "admin@teste.com");
-        User gerente = new User(nextId++, "Gerente Estoque", "gerente@teste.com");
-
-        usuarios.add(admin);
-        usuarios.add(gerente);
+        usuarios.add(new User(nextId++, "Admin", "admin@teste.com"));
+        usuarios.add(new User(nextId++, "Gerente Estoque", "gerente@teste.com"));
     }
 
     public List<User> listarTodos() {
         return new ArrayList<>(usuarios);
     }
 
-    public Optional<User> buscarPorId(Long id) {
-        return usuarios.stream().filter(u -> u.getId().equals(id)).findFirst();
+    public User buscarPorId(Long id) {
+        for (User u : usuarios) {
+            if (u.getId().equals(id)) return u;
+        }
+        return null;
     }
 
     public void salvar(User user) {
@@ -36,13 +35,11 @@ public class UserService {
     }
 
     public void atualizar(Long id, User userAtualizado) {
-        usuarios.stream()
-            .filter(u -> u.getId().equals(id))
-            .findFirst()
-            .ifPresent(u -> {
-                u.setName(userAtualizado.getName());
-                u.setEmail(userAtualizado.getEmail());
-            });
+        User existente = buscarPorId(id);
+        if (existente != null) {
+            existente.setName(userAtualizado.getName());
+            existente.setEmail(userAtualizado.getEmail());
+        }
     }
 
     public void deletar(Long id) {

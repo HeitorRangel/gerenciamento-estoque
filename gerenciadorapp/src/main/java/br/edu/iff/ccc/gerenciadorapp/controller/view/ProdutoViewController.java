@@ -4,13 +4,10 @@ import br.edu.iff.ccc.gerenciadorapp.dto.ProdutoDTO;
 import br.edu.iff.ccc.gerenciadorapp.entities.Produto;
 import br.edu.iff.ccc.gerenciadorapp.services.FornecedorService;
 import br.edu.iff.ccc.gerenciadorapp.services.ProdutoService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/produtos")
@@ -36,7 +33,7 @@ public class ProdutoViewController {
     }
 
     @PostMapping("/novo")
-    public String salvarNovoProduto(@ModelAttribute("produtoDTO") ProdutoDTO produtoDTO) {
+    public String salvarNovoProduto(@ModelAttribute ProdutoDTO produtoDTO) {
         Produto produto = converterDTOParaProduto(produtoDTO);
         produtoService.salvar(produto);
         return "redirect:/produtos";
@@ -44,10 +41,9 @@ public class ProdutoViewController {
 
     @GetMapping("/{id}/editar")
     public String editarProdutoForm(@PathVariable Long id, Model model) {
-        Optional<Produto> produtoOpt = produtoService.buscarPorId(id);
-        if (produtoOpt.isEmpty()) return "redirect:/produtos";
+        Produto produto = produtoService.buscarPorId(id);
+        if (produto == null) return "redirect:/produtos";
 
-        Produto produto = produtoOpt.get();
         ProdutoDTO produtoDTO = new ProdutoDTO(
                 produto.getNome(),
                 produto.getDescricao(),
@@ -65,7 +61,7 @@ public class ProdutoViewController {
 
     @PostMapping("/{id}/editar")
     public String salvarEdicaoProduto(@PathVariable Long id,
-                                      @ModelAttribute("produtoDTO") ProdutoDTO produtoDTO) {
+                                      @ModelAttribute ProdutoDTO produtoDTO) {
         Produto produtoAtualizado = converterDTOParaProduto(produtoDTO);
         produtoService.atualizar(id, produtoAtualizado);
         return "redirect:/produtos";
@@ -85,7 +81,9 @@ public class ProdutoViewController {
         produto.setPreco(dto.getPreco());
 
         if (dto.getFornecedorId() != null) {
-            produto.setFornecedor(fornecedorService.buscarPorId(dto.getFornecedorId()).orElse(null));
+            produto.setFornecedor(
+                    fornecedorService.buscarPorId(dto.getFornecedorId()) // já retorna null se não encontrar
+            );
         }
 
         return produto;

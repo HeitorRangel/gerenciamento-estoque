@@ -48,7 +48,7 @@ public class FornecedorViewController {
 
     @GetMapping("/{id}")
     public String detalhesFornecedor(@PathVariable Long id, Model model) {
-        Fornecedor fornecedor = fornecedorService.buscarPorId(id).orElse(null);
+        Fornecedor fornecedor = fornecedorService.buscarPorId(id);
         if (fornecedor == null) {
             return "redirect:/fornecedores";
         }
@@ -58,7 +58,7 @@ public class FornecedorViewController {
 
     @GetMapping("/{id}/editar")
     public String editarFornecedorForm(@PathVariable Long id, Model model) {
-        Fornecedor fornecedor = fornecedorService.buscarPorId(id).orElse(null);
+        Fornecedor fornecedor = fornecedorService.buscarPorId(id);
         if (fornecedor == null) {
             return "redirect:/fornecedores";
         }
