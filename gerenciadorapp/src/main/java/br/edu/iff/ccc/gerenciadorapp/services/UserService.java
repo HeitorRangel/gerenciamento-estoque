@@ -1,48 +1,51 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.User;
+import br.edu.iff.ccc.gerenciadorapp.exceptions.UsuarioNaoEncontradoException; // Importar a nova exceção
+import br.edu.iff.ccc.gerenciadorapp.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
 
-    private final List<User> usuarios = new ArrayList<>();
-    private long nextId = 1;
-
-    public UserService() {
-        // Usuários mocados
-        usuarios.add(new User(nextId++, "Admin", "admin@teste.com"));
-        usuarios.add(new User(nextId++, "Gerente Estoque", "gerente@teste.com"));
-    }
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     public List<User> listarTodos() {
-        return new ArrayList<>(usuarios);
+        return usuarioRepository.findAll();
     }
 
     public User buscarPorId(Long id) {
-        for (User u : usuarios) {
-            if (u.getId().equals(id)) return u;
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário com ID " + id + " não encontrado."));
+    }
+
+    public User salvar(User user) {
+        if (usuarioRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalStateException("Email " + user.getEmail() + " já está em uso.");
         }
-        return null;
+        return usuarioRepository.save(user);
     }
 
-    public void salvar(User user) {
-        user.setId(nextId++);
-        usuarios.add(user);
-    }
-
-    public void atualizar(Long id, User userAtualizado) {
+    public User atualizar(Long id, User userAtualizado) {
+        // A linha abaixo já garante que o usuário existe. Se não existir, o método para aqui.
         User existente = buscarPorId(id);
-        if (existente != null) {
-            existente.setName(userAtualizado.getName());
-            existente.setEmail(userAtualizado.getEmail());
-        }
+
+        // Atualiza os campos do usuário existente com os novos dados
+        existente.setName(userAtualizado.getName());
+        existente.setEmail(userAtualizado.getEmail());
+
+        // Salva o usuário com os dados atualizados
+        return usuarioRepository.save(existente);
     }
 
     public void deletar(Long id) {
-        usuarios.removeIf(u -> u.getId().equals(id));
+        if (!usuarioRepository.existsById(id)) {
+            throw new UsuarioNaoEncontradoException("Usuário com ID " + id + " não encontrado para deleção.");
+        }
+        usuarioRepository.deleteById(id);
     }
 }
