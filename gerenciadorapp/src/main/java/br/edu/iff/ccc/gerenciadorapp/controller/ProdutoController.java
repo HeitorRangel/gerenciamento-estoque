@@ -1,5 +1,8 @@
 package br.edu.iff.ccc.gerenciadorapp.controller;
 
+import br.edu.iff.ccc.gerenciadorapp.entities.Produto;
+import br.edu.iff.ccc.gerenciadorapp.services.ProdutoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,18 +10,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/produto")
 public class ProdutoController {
 
+    @Autowired
+    private ProdutoService produtoService;
+
     @GetMapping("/{id}")
-    public ResponseEntity<String> getProduto(@PathVariable Long id) {
-        String produto = String.format("Produto com ID %d: Nome=Exemplo, Descrição=Produto de exemplo, Preço=100.00", id);
+    public ResponseEntity<Produto> getProduto(@PathVariable Long id) {
+        Produto produto = produtoService.buscarPorId(id);
         return ResponseEntity.ok(produto);
     }
 
     @PostMapping
-    public ResponseEntity<String> criarProduto(
-            @RequestParam String nome,
-            @RequestParam String descricao,
-            @RequestParam Double preco) {
-        System.out.printf("Produto recebido: Nome=%s, Descrição=%s, Preço=%.2f%n", nome, descricao, preco);
-        return ResponseEntity.ok("Produto cadastrado com sucesso!");
+    public ResponseEntity<Produto> criarProduto(@RequestBody Produto produto) {
+        Produto salvo = produtoService.salvar(produto);
+        return ResponseEntity.ok(salvo);
     }
 }
