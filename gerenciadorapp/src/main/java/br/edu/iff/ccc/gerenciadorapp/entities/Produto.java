@@ -20,23 +20,23 @@ public class Produto implements Serializable {
     private Long id;
 
     @NotBlank(message = "Nome não pode estar vazio")
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String nome;
 
     @NotBlank(message = "Descrição não pode estar vazia")
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String descricao;
 
     @PositiveOrZero(message = "Quantidade não pode ser negativa")
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Integer quantidade;
 
     @Positive(message = "Preço deve ser maior que zero")
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Float preco;
 
     @ManyToOne
-    @JoinColumn(name = "fornecedor_id", nullable = true)
+    @JoinColumn(name = "fornecedor_id", nullable = false)
     private Fornecedor fornecedor;
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -24,7 +24,7 @@ public class UsuarioViewController {
     public String listarUsuarios(Model model) {
         List<User> usuarios = userService.listarTodos();
         model.addAttribute("usuarios", usuarios);
-        return "usuarios/lista";
+        return "usuarios/listar";
     }
 
     // Detalhar um usuário específico

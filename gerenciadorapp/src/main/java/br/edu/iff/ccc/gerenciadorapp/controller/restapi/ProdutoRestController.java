@@ -1,6 +1,9 @@
 package br.edu.iff.ccc.gerenciadorapp.controller.restapi;
 
+import br.edu.iff.ccc.gerenciadorapp.dto.ProdutoDTO;
 import br.edu.iff.ccc.gerenciadorapp.entities.Produto;
+import br.edu.iff.ccc.gerenciadorapp.exceptions.RegraDeNegocioException;
+import br.edu.iff.ccc.gerenciadorapp.services.FornecedorService;
 import br.edu.iff.ccc.gerenciadorapp.services.ProdutoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,15 +25,17 @@ public class ProdutoRestController {
     @Autowired
     private ProdutoService produtoService;
 
-    @Operation(summary = "Listar Produtos", description = "Lista todos os produtos cadastrados no sistema")
-    @ApiResponse(responseCode = "200", description = "Lista de produtos retornada com sucesso")
+    @Autowired
+    private FornecedorService fornecedorService;
+
+    @Operation(summary = "Listar Produtos", description = "Lista todos os produtos cadastrados")
+    @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
     @GetMapping
     public ResponseEntity<List<Produto>> listarTodos() {
-        List<Produto> produtos = produtoService.listarTodos();
-        return ResponseEntity.ok(produtos);
+        return ResponseEntity.ok(produtoService.listarTodos());
     }
 
-    @Operation(summary = "Buscar Produto por ID", description = "Retorna um produto pelo seu ID")
+    @Operation(summary = "Buscar Produto por ID", description = "Retorna um produto pelo ID")
     @ApiResponse(responseCode = "200", description = "Produto encontrado")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     @GetMapping("/{id}")
@@ -43,16 +48,21 @@ public class ProdutoRestController {
     @ApiResponse(responseCode = "201", description = "Produto criado com sucesso")
     @ApiResponse(responseCode = "400", description = "Dados inválidos ou produto já existe")
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody Produto produto) {
-        Produto salvo = produtoService.salvar(produto);
+    public ResponseEntity<Produto> criarProduto(@Valid @RequestBody ProdutoDTO dto) {
+        try {
+            Produto produto = converterDTOParaProduto(dto);
+            Produto salvo = produtoService.salvar(produto);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(salvo.getId())
-                .toUri();
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(salvo.getId())
+                    .toUri();
 
-        return ResponseEntity.created(location).body(salvo);
+            return ResponseEntity.created(location).body(salvo);
+        } catch (RegraDeNegocioException | IllegalStateException ex) {
+            throw new RegraDeNegocioException(ex.getMessage());
+        }
     }
 
     @Operation(summary = "Atualizar Produto", description = "Atualiza um produto existente")
@@ -60,8 +70,9 @@ public class ProdutoRestController {
     @ApiResponse(responseCode = "400", description = "Dados inválidos")
     @ApiResponse(responseCode = "404", description = "Produto não encontrado")
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @Valid @RequestBody Produto produto) {
-        Produto atualizado = produtoService.atualizar(id, produto);
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoDTO dto) {
+        Produto produtoAtualizado = converterDTOParaProduto(dto);
+        Produto atualizado = produtoService.atualizar(id, produtoAtualizado);
         return ResponseEntity.ok(atualizado);
     }
 
@@ -72,5 +83,20 @@ public class ProdutoRestController {
     public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
         produtoService.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Conversão DTO -> Entidade
+    private Produto converterDTOParaProduto(ProdutoDTO dto) {
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
+        produto.setDescricao(dto.getDescricao());
+        produto.setQuantidade(dto.getQuantidade());
+        produto.setPreco(dto.getPreco());
+
+        if (dto.getFornecedorId() != null) {
+            produto.setFornecedor(fornecedorService.buscarPorId(dto.getFornecedorId()));
+        }
+
+        return produto;
     }
 }

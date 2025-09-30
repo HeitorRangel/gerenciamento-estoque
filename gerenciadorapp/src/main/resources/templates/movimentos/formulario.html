@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title th:text="${movimentoId != null} ? 'Editar Movimentação' : 'Nova Movimentação'">Movimentação</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-3xl font-bold mb-6"
+        th:text="${movimentoId != null} ? 'Editar Movimentação' : 'Nova Movimentação'">
+        Nova Movimentação
+    </h1>
+
+    <form th:action="${movimentoId != null} ? @{/movimentos/{id}/editar(id=${movimentoId})} : @{/movimentos}"
+        th:object="${movimentoDTO}" method="post">
+
+        <div>
+            <label for="produto" class="block mb-1">Produto:</label>
+            <select id="produto" th:field="*{produtoId}"
+                    class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600">
+                <option value="">-- Selecione um produto --</option>
+                <option th:each="prod : ${produtos}"    
+                        th:value="${prod.id}"
+                        th:text="${prod.nome}"
+                        th:selected="${prod.id == movimentoDTO.produtoId}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="quantidade" class="block mb-1">Quantidade:</label>
+            <input type="number" id="quantidade" th:field="*{quantidade}" min="1" required
+                   class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600"/>
+            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('quantidade')}" th:errors="*{quantidade}"></p>
+        </div>
+
+        <div>
+            <label for="tipo" class="block mb-1">Tipo de Movimentação:</label>
+            <select id="tipo" th:field="*{tipo}"
+                    class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600">
+                <option value="">-- Selecione --</option>
+                <option th:each="t : ${tiposMovimento}"
+                        th:value="${t}" th:text="${t}"
+                        th:selected="${t == movimentoDTO.tipo}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label for="usuario" class="block mb-1">Usuário:</label>
+            <select id="usuario" th:field="*{usuarioId}"
+                    class="w-full p-3 rounded-md bg-[#240046] text-white border border-gray-600">
+                <option value="">-- Selecione um usuário --</option>
+                <option th:each="usr : ${usuarios}"
+                        th:value="${usr.id}" 
+                        th:text="${usr.name + ' (' + usr.email + ')'}">
+                </option>
+
+
+            </select>
+            <p class="text-red-500 text-sm" th:if="${#fields.hasErrors('usuarioId')}" th:errors="*{usuarioId}"></p>
+        </div>
+
+
+        <div class="flex gap-4 mt-4">
+            <button type="submit" class="px-4 py-2 bg-purple-700 text-white rounded-md hover:bg-purple-800"
+                    th:text="${movimentoId != null} ? 'Salvar Alterações' : 'Salvar'">
+                Salvar
+            </button>
+        </div>
+
+    </form>
+
+</main>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.User;
+import br.edu.iff.ccc.gerenciadorapp.exceptions.RegraDeNegocioException;
 import br.edu.iff.ccc.gerenciadorapp.exceptions.UsuarioNaoEncontradoException; // Importar a nova exceção
 import br.edu.iff.ccc.gerenciadorapp.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class UserService {
 
     public User salvar(User user) {
         if (usuarioRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalStateException("Email " + user.getEmail() + " já está em uso.");
+            throw new RegraDeNegocioException("Email " + user.getEmail() + " já está em uso.");
         }
         return usuarioRepository.save(user);
     }
@@ -48,4 +49,5 @@ public class UserService {
         }
         usuarioRepository.deleteById(id);
     }
+
 }
