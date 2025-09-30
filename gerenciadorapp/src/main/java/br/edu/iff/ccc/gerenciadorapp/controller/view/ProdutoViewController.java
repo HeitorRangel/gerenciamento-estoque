@@ -19,12 +19,14 @@ public class ProdutoViewController {
     @Autowired
     private FornecedorService fornecedorService;
 
+    // Listagem de todos os produtos
     @GetMapping
     public String listarProdutos(Model model) {
         model.addAttribute("produtos", produtoService.listarTodos());
         return "produtos/listar";
     }
 
+    // Exibe o formulário para criar novo produto
     @GetMapping("/novo")
     public String novoProdutoForm(Model model) {
         model.addAttribute("produtoDTO", new ProdutoDTO());
@@ -32,6 +34,7 @@ public class ProdutoViewController {
         return "produtos/formulario";
     }
 
+    // Salva o novo produto no banco
     @PostMapping("/novo")
     public String salvarNovoProduto(@ModelAttribute ProdutoDTO produtoDTO) {
         Produto produto = converterDTOParaProduto(produtoDTO);
@@ -39,10 +42,13 @@ public class ProdutoViewController {
         return "redirect:/produtos";
     }
 
+    // Exibe o formulário de edição
     @GetMapping("/{id}/editar")
     public String editarProdutoForm(@PathVariable Long id, Model model) {
         Produto produto = produtoService.buscarPorId(id);
-        if (produto == null) return "redirect:/produtos";
+        if (produto == null) {
+            return "redirect:/produtos";
+        }
 
         ProdutoDTO produtoDTO = new ProdutoDTO(
                 produto.getNome(),
@@ -59,6 +65,7 @@ public class ProdutoViewController {
         return "produtos/formulario";
     }
 
+    // Salva as alterações feitas em um produto existente
     @PostMapping("/{id}/editar")
     public String salvarEdicaoProduto(@PathVariable Long id,
                                       @ModelAttribute ProdutoDTO produtoDTO) {
@@ -67,12 +74,14 @@ public class ProdutoViewController {
         return "redirect:/produtos";
     }
 
+    // Exclui um produto do banco
     @PostMapping("/{id}/deletar")
     public String deletarProduto(@PathVariable Long id) {
         produtoService.deletar(id);
         return "redirect:/produtos";
     }
 
+    // Conversão DTO -> Entidade
     private Produto converterDTOParaProduto(ProdutoDTO dto) {
         Produto produto = new Produto();
         produto.setNome(dto.getNome());
@@ -82,7 +91,7 @@ public class ProdutoViewController {
 
         if (dto.getFornecedorId() != null) {
             produto.setFornecedor(
-                    fornecedorService.buscarPorId(dto.getFornecedorId()) // já retorna null se não encontrar
+                    fornecedorService.buscarPorId(dto.getFornecedorId())
             );
         }
 

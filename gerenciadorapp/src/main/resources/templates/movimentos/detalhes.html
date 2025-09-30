@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base_layout :: base(titulo = ~{::title}, conteudo = ~{::main})}">
+<head>
+    <title>Detalhes da Movimentação</title>
+</head>
+<body>
+<main class="px-10 py-6">
+
+    <h1 class="text-[#111418] text-[32px] font-bold mb-6">Detalhes da Movimentação</h1>
+
+    <div>
+        <p><strong>ID:</strong> <span th:text="${movimento.id}"></span></p>
+        <p><strong>Produto:</strong> <span th:text="${movimento.produto.nome}"></span></p>
+        <p><strong>Quantidade:</strong> <span th:text="${movimento.quantidade}"></span></p>
+        <p><strong>Tipo:</strong> <span th:text="${movimento.tipo}"></span></p>
+        <p><strong>Usuário:</strong> <span th:text="${movimento.usuario.nome}"></span></p>
+        <p><strong>Data:</strong>
+            <span th:text="${#temporals.format(movimento.dataMovimento, 'dd/MM/yyyy HH:mm')}"></span>
+        </p>
+    </div>
+
+    <div class="mt-6">
+        <a th:href="@{/movimentos}" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Voltar</a>
+        <a th:href="@{'/movimentos/' + ${movimento.id} + '/editar'}"
+           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Editar</a>
+    </div>
+
+</main>
+</body>
+</html>

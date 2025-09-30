@@ -14,22 +14,22 @@ public class MovimentoEstoque implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false) // todo movimento precisa ter um produto
+    @ManyToOne(optional = true) // todo movimento precisa ter um produto
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Integer quantidade;
 
     @Enumerated(EnumType.STRING) // salva como texto: "ENTRADA" ou "SAIDA"
-    @Column(nullable = false)
+    @Column(nullable = true)
     private TipoMovimento tipo;
 
-    @Column(name = "data_movimento", nullable = false)
+    @Column(name = "data_movimento", nullable = true)
     private LocalDateTime dataMovimento;
 
     @ManyToOne(optional = false) // todo movimento deve ser feito por um usuário
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = true)
     private User usuario;
 
     public MovimentoEstoque() {}

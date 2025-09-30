@@ -1,47 +1,53 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.Produto;
+import br.edu.iff.ccc.gerenciadorapp.exceptions.ProdutoNaoEncontradoException; // Importar exceção
+import br.edu.iff.ccc.gerenciadorapp.exceptions.RegraDeNegocioException;
+import br.edu.iff.ccc.gerenciadorapp.repository.ProdutoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProdutoService {
 
-    private final List<Produto> produtos = new ArrayList<>();
-    private long nextId = 1;
+    @Autowired
+    private ProdutoRepository produtoRepository;
 
     public List<Produto> listarTodos() {
-        return new ArrayList<>(produtos);
+        return produtoRepository.findAll();
+    }
+
+    public Produto buscarPorId(Long id) {
+        return produtoRepository.findById(id)
+                .orElseThrow(() -> new ProdutoNaoEncontradoException("Produto com ID " + id + " não encontrado."));
     }
 
     public Produto salvar(Produto produto) {
-        produto.setId(nextId++);
-        produtos.add(produto);
-        return produto;
-    }
-
-    public Produto buscarPorId(long id) {
-        for (Produto p : produtos) {
-            if (p.getId().equals(id)) return p;
+        if (produtoRepository.existsByNome(produto.getNome())) {
+            throw new RegraDeNegocioException("Já existe um produto cadastrado com o nome: " + produto.getNome());
         }
-        return null;
+        return produtoRepository.save(produto);
     }
 
-    public Produto atualizar(long id, Produto produtoAtualizado) {
-        Produto existente = buscarPorId(id);
-        if (existente != null) {
-            existente.setNome(produtoAtualizado.getNome());
-            existente.setDescricao(produtoAtualizado.getDescricao());
-            existente.setQuantidade(produtoAtualizado.getQuantidade());
-            existente.setPreco(produtoAtualizado.getPreco());
-            existente.setFornecedor(produtoAtualizado.getFornecedor());
+
+    public Produto atualizar(Long id, Produto produtoAtualizado) {
+        Produto produtoExistente = buscarPorId(id);
+
+        produtoExistente.setNome(produtoAtualizado.getNome());
+        produtoExistente.setDescricao(produtoAtualizado.getDescricao());
+        produtoExistente.setQuantidade(produtoAtualizado.getQuantidade());
+        produtoExistente.setPreco(produtoAtualizado.getPreco());
+        produtoExistente.setFornecedor(produtoAtualizado.getFornecedor());
+
+        return produtoRepository.save(produtoExistente);
+    }
+
+    public void deletar(Long id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new ProdutoNaoEncontradoException("Produto com ID " + id + " não encontrado para deleção.");
         }
-        return existente;
-    }
-
-    public boolean deletar(long id) {
-        return produtos.removeIf(p -> p.getId() == id);
+        produtoRepository.deleteById(id);
     }
 }

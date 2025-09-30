@@ -1,52 +1,49 @@
 package br.edu.iff.ccc.gerenciadorapp.services;
 
 import br.edu.iff.ccc.gerenciadorapp.entities.Fornecedor;
+import br.edu.iff.ccc.gerenciadorapp.exceptions.FornecedorNaoEncontradoException; // Importar
+import br.edu.iff.ccc.gerenciadorapp.repository.FornecedorRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FornecedorService {
 
-    private final List<Fornecedor> fornecedores = new ArrayList<>();
-    private long nextId = 1;
-
-    public FornecedorService() {
-        // Fornecedor de exemplo
-        Fornecedor exemplo = new Fornecedor(); 
-        exemplo.setId(nextId++);
-        exemplo.setNome("Fornecedor Exemplo");
-        fornecedores.add(exemplo);
-    }
+    @Autowired
+    private FornecedorRepository fornecedorRepository;
 
     public List<Fornecedor> listarTodos() {
-        return new ArrayList<>(fornecedores);
+        return fornecedorRepository.findAll();
     }
 
-    public Fornecedor buscarPorId(long id) {
-        for (Fornecedor f : fornecedores) {
-            if (f.getId() == id) return f;
-        }
-        return null;
+    public Fornecedor buscarPorId(Long id) {
+        return fornecedorRepository.findById(id)
+                .orElseThrow(() -> new FornecedorNaoEncontradoException("Fornecedor com ID " + id + " não encontrado."));
     }
 
     public Fornecedor salvar(Fornecedor fornecedor) {
-        fornecedor.setId(nextId++);
-        fornecedores.add(fornecedor);
-        return fornecedor;
-    }
-
-    public Fornecedor atualizar(long id, Fornecedor fornecedorAtualizado) {
-        Fornecedor existente = buscarPorId(id);
-        if (existente != null) {
-            existente.setNome(fornecedorAtualizado.getNome());
-            existente.setContato(fornecedorAtualizado.getContato());
+        if (fornecedorRepository.existsByNome(fornecedor.getNome())) {
+            throw new IllegalStateException("Já existe um fornecedor cadastrado com o nome: " + fornecedor.getNome());
         }
-        return existente;
+        return fornecedorRepository.save(fornecedor);
     }
 
-    public boolean deletar(long id) {
-        return fornecedores.removeIf(f -> f.getId() == id);
+    public Fornecedor atualizar(Long id, Fornecedor fornecedorAtualizado) {
+
+        Fornecedor existente = buscarPorId(id);
+
+        existente.setNome(fornecedorAtualizado.getNome());
+        existente.setContato(fornecedorAtualizado.getContato());
+
+        return fornecedorRepository.save(existente);
+    }
+
+    public void deletar(Long id) {
+        if (!fornecedorRepository.existsById(id)) {
+            throw new FornecedorNaoEncontradoException("Fornecedor com ID " + id + " não encontrado para deleção.");
+        }
+        fornecedorRepository.deleteById(id);
     }
 }
